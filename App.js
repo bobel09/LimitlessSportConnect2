@@ -7,17 +7,26 @@ import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
 
  const Stack = createNativeStackNavigator();
-
+ const AuthStack = () => {
+   return (
+     <Stack.Navigator>
+       <Stack.Screen name="Login" component={LoginScreen} />
+       <Stack.Screen name="Signup" component={SignupScreen} />
+     </Stack.Navigator>
+   );
+ }
+ const AppStack = () => {
+   return (
+     <Stack.Navigator>
+       <Stack.Screen name="Home" options={{headerShown : false}} component={HomeScreen} />
+     </Stack.Navigator>
+   );
+ }
 export default function App() {
+  const isSignedIn = false;
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-          <Stack.Screen options = {{headerShown: false }}  name="Login" component={LoginScreen} />
-          <Stack.Screen options = {{headerShown: false}}  name="Home" component={HomeScreen} />
-          <Stack.Screen options = {{headerShown: false}} name="Signup" component={SignupScreen} />
-          
-          
-      </Stack.Navigator>
+      {isSignedIn ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }
