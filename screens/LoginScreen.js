@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 import {
   StyleSheet,
   Text,
@@ -7,8 +8,20 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+
 
 const LoginScreen = () => {
+  const navigation = useNavigation();
+
+  const navigateToSignup = () => {
+    navigation.navigate('Signup');
+  };
+  const navigateToHome = () => {
+    navigation.navigate('Home');
+  }
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
       <View style={styles.logoContainer}>
@@ -29,20 +42,19 @@ const LoginScreen = () => {
         />
       </View>
 
-      <TouchableOpacity style={styles.loginButton}>
+      <TouchableOpacity onPress={navigateToHome} style={styles.loginButton}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
       <View style={styles.bottomContainer}>
         <Text style={styles.bottomText}>Don't have an account?</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={navigateToSignup}>
           <Text style={styles.signUpText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
