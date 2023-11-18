@@ -5,17 +5,23 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
 
  const Stack = createNativeStackNavigator();
- const AuthStack = () => {
+ const AuthStack = ({setIsSignedIn}) => {
    return (
-     <Stack.Navigator>
-       <Stack.Screen name="Login" component={LoginScreen} />
-       <Stack.Screen name="Signup" component={SignupScreen} />
-     </Stack.Navigator>
+<Stack.Navigator>
+      <Stack.Screen name="Login" options={{ headerShown: false }}>
+        {(props) => <LoginScreen {...props} setIsSignedIn={setIsSignedIn} />}
+      </Stack.Screen>
+      <Stack.Screen name="Signup" options={{ headerShown: false }} component={SignupScreen} />
+    </Stack.Navigator>
    );
  }
  const AppStack = () => {
+    const [isSignedIn, setIsSignedIn] = React.useState(false);
+
    return (
      <Stack.Navigator>
        <Stack.Screen name="Home" options={{headerShown : false}} component={HomeScreen} />
@@ -23,10 +29,10 @@ import SignupScreen from "./screens/SignupScreen";
    );
  }
 export default function App() {
-  const isSignedIn = false;
+  const [isSignedIn, setIsSignedIn] = React.useState(false);
   return (
     <NavigationContainer>
-      {isSignedIn ? <AppStack /> : <AuthStack />}
+      {isSignedIn ? <AppStack /> : <AuthStack setIsSignedIn={setIsSignedIn} />}
     </NavigationContainer>
   );
 }

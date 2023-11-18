@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';  
+import { auth, createUserWithEmailAndPassword } from '../FireBase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const SignupScreen= () => {
@@ -23,11 +25,33 @@ const SignupScreen= () => {
             alert('Passwords do not match');
             return;
         }
+        if (Password.length < 6) {
+            alert('Password must be at least 6 characters');
+            return;
+        }
+        if (!Email.includes('@')) {
+            alert('Please enter a valid email');
+            return;
+        }
         if (Email === '' || Password === '' || ConfirmPassword === '') {
             alert('Please fill in all fields');
             return;
         }
-        navigateToLogin();
+        
+        createUserWithEmailAndPassword(auth, Email, Password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log('Registered with:', user.email);
+            navigateToLogin();
+        })
+        .catch((error) => {
+            // Handle errors here
+            console.error('Error registering user:', error.message);
+        });
+        
+        // navigateToLogin();
+
         
     }
   const navigateToLogin= () => {

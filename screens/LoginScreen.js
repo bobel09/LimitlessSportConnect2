@@ -10,11 +10,30 @@ import {
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { auth, createUserWithEmailAndPassword , signInWithEmailAndPassword} from '../FireBase';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 
 
-const LoginScreen = () => {
+
+
+const LoginScreen = ({setIsSignedIn}) => {
   const navigation = useNavigation();
+    const [Email, setEmail] = React.useState('');
+    const [Password, setPassword] = React.useState('');
+    
+    //setIsSignedIn = false;
+    const handleLogin = () => {
+    signInWithEmailAndPassword(auth, Email, Password)
+    .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log('Logged in with:', user.email);
+        if(setIsSignedIn){
+        setIsSignedIn(true);}
+        navigateToHome();
+    })  
+    };
 
   const navigateToSignup = () => {
     navigation.navigate('Signup');
@@ -22,6 +41,7 @@ const LoginScreen = () => {
   const navigateToHome = () => {
     navigation.navigate('Home');
   }
+
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
       <View style={styles.logoContainer}>
@@ -33,16 +53,18 @@ const LoginScreen = () => {
           placeholder="Email"
           style={styles.input}
           placeholderTextColor="#B4B4B4"
+          onChangeText={setEmail}
         />
         <TextInput
           placeholder="Password"
           style={styles.input}
           placeholderTextColor="#B4B4B4"
           secureTextEntry
+          onChangeText={setPassword}
         />
       </View>
 
-      <TouchableOpacity onPress={navigateToHome} style={styles.loginButton}>
+      <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
